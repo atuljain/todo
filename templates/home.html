@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+   <html>
+      <head>
+         <title>TODO</title>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+         <style type="text/css">
+      
+            @media only screen and (min-width : 481px) {
+              .flex-row.row {
+                display: flex;
+                flex-wrap: wrap;
+              }
+              .flex-row.row > [class*='col-'] {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+              }
+              .flex-row.row:after, 
+              .flex-row.row:before {
+                display: flex;
+              }
+            }
+
+            @media only screen and (min-width: 992px) {
+               .bgfbox .flex-row .col-md-4:first-child > a, 
+               .bgfbox-first, 
+               .bgfbox-content {
+                  display: flex;
+                  flex-grow: 1;
+                  flex-direction: column;
+               }
+            }
+
+            .border {
+               border: 2px solid #e8e8e8
+            }
+            
+            .bgfbox .flex-row {
+               margin-left: 0px;
+               margin-right: 0px;
+            }
+
+            .bgfbox .col-md-4 {
+               padding: 0;
+            }
+
+            .bgfbox .bgfbox-content {
+               padding: 50px;
+            }
+
+            .row-divider {
+                margin-bottom: 20px;
+            }
+
+            .bg-white {
+               background-color: #fff;
+            }
+
+            .bgfbox {
+               padding-top: 80px;
+               padding-bottom: 80px;
+            }
+            
+         </style>>
+      </head>
+      <body>
+         <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+               <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="#">TODO</a>
+                  <a class="navbar-brand" href="/logout">logout</a>
+               </div>
+               <div id="navbar" class="navbar-collapse collapse">
+               </div>
+            </div>
+         </nav>
+         <div class=page>
+            <div class=metanav>
+               <section class="bgfbox">
+                  <div class="container">
+                     <div class="row flex-row">
+
+                        <div class="col-md-8">
+                              <div class="row flex-row">
+
+                                 <div class="col-md-12">
+                                    <div class="bgfbox-first bg-white border row-divider">
+                                       <div class="bgfbox-content">
+                                          <div class="card-block bgfbox-text-wrap">
+                                              <form id="createTask" method="post" class="navbar-form navbar-right" action="">
+                                                  {% csrf_token %}
+                                                  <div class="form-body">
+                                                      <div class="form-group">
+                                                          <input name="title" class="form-control border-primary" type="text" placeholder="Title" value="" />
+                                                      </div>
+                          
+                                                      <div class="form-group">
+                                                          <input name="due_date" class="form-control border-primary" type="date" placeholder="Due Date" value="" >
+                                                      </div>
+                          
+                                                      <div class="form-group">
+                                                          <select name="parent_task" id="parent_task" class="form-control">
+                                                              <option value="">Select Task</option>  
+                                                            {% for task in tasks %}
+                                                          
+                                                            <option value="{{task.id}}">{{task.title}}</option>
+                                                          {% endfor %}
+                                                      </select>
+                                                      </div>                          
+                                                  </div>
+                                                  <div class="form-actions right">
+                                                      <button id="racSubmit" type="submit" class="btn btn-primary">
+                                                          <i class="icon-check2"></i> Send
+                                                      </button>
+                                                  </div>
+                                                </form>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+
+                              </div>
+                              <div class="row flex-row">
+
+                                 <div class="col-md-12">
+                                    <div class="bgfbox-first bg-white border">
+                                       <div class="bgfbox-content">
+                                          <div class="bgfbox-text-wrap">
+                                              <form id="searchform" action="" method="get" accept-charset="utf-8">
+                                                  <button class="searchbutton" type="submit">
+                                                    <i class="fa fa-search"></i>
+                                                  </button>
+                                                  <input class="searchfield" id="titleSearch" name="search_title" type="text" placeholder="Search">
+                                                </form>
+                                              <table class="table">
+                                                  <thead>
+                                                    <tr>
+                                                      <th scope="col"><a href="?order_by=id">ID</a></th>
+                                                      <th scope="col"><a href="?order_by=title">Title</a></th>
+                                                      <th scope="col"><a href="?order_by=due_date">Due Date</a></th>
+                                                      <th scope="col">Parent Task</th>
+                                                      <th scope="col">User</th>
+                                                      <th scope="col">Creadted</th>
+                                                      <th scope="col">Updated</th>
+                                                      <th scope="col">State</th>
+                                                      <th>Delete</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    {% for task in tasks %}
+                                                    <tr>
+                                                      <th scope="row"><a href="http://{{host}}/api/task/{{task.id}}">{{task.id}}</a></th>
+                                                      <td>{{task.title}}</td>
+                                                      <td>{{task.due_date}}</td>
+                                                      <td>{{task.parent_task}}</td>
+                                                      <td>{{task.user}}</td>
+                                                  
+                                                      <td>{{task.created_at}}</td>
+                                                      <td>{{task.updated_at}}</td>
+                                                      <td>{{task.state}}</td>
+                                                      <td><form action="/delete" method="POST">
+                                                            {% csrf_token %}
+                                                            <input id="task_id" name="task_id" type="hidden" value="{{task.id}}">
+                                                            <input class="btn btn-default btn-danger" type="submit" value="Delete"/>
+                                                          </form></td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                  </tbody>
+                                                </table>
+                                                <div class="pagination">
+                                                    <span class="step-links">
+                                                        {% if tasks.has_previous %}
+                                                            <a href="?page=1">&laquo; first</a>
+                                                            <a href="?page={{ tasks.previous_page_number }}">previous</a>
+                                                        {% endif %}
+
+                                                        <span class="current">
+                                                            Page {{ tasks.number }} of {{ tasks.paginator.num_pages }}.
+                                                        </span>
+
+                                                        {% if tasks.has_next %}
+                                                            <a href="?page={{ tasks.next_page_number }}">next</a>
+                                                            <a href="?page={{ tasks.paginator.num_pages }}">last &raquo;</a>
+                                                        {% endif %}
+                                                    </span>
+                                                </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+
+                              </div>
+                        </div>
+                        <div class="col-md-4">
+                           <div class="bgfbox-content bg-white border">
+                              <div class="bgfbox-text-wrap">
+                                 <h2>List of Available API'S</h2>
+                                <h4>Get all task</h4>
+                                <a href="#">http://{{host}}/api/task/</a>
+                                <h4>Get sinlge task by id</h4>
+                                <a href="#">http://{{host}}/api/task/task_id</a>
+                                <h4>Search task by name</h4>
+                                <a href="#">http://{{host}}/api/task/?title=task_name</a>
+                                <h4>Search task by due date</h4>
+                                <a href="#">http://{{host}}/api/task/?due_date=2018-04-26</a>
+                                <h4>Get tasks by between two dates</h4>
+                                <a href="#">http://{{host}}/api/task/?due_date__lte=2018-04-26&postTime__gte=2018-04-26</a>
+                                
+                                <h4>Task Schema</h4>
+                                <a href="#">http://{{host}}/api/task//api/task/schema/</a>
+
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </section>
+            </div>
+         </div> 
+      </body>
+   </html>
