@@ -115,5 +115,5 @@ def permannat_delete_task():
     # get 15 days before date
     old = today-timedelta(days=15)
     # delete those task which is updated to delete state before old date
-    task = Task.objects.filter(updated_at__lte=today,state='delete').delete()
+    task = Task.objects.filter(updated_at__lte=old,state='delete').delete()
     return 'deleted'
