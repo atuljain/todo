@@ -205,6 +205,12 @@
                            <div class="bgfbox-content bg-white border">
                               <div class="bgfbox-text-wrap">
                                  <h2>List of Available API'S</h2>
+                                 <div class="form-group">
+                                        <h3>Task create post request</h3>
+                                        <p>
+                                            curl --dump-header - -H "Content-Type: application/json" -X POST --data '{"title": "task name", "due_date": "2018-04-22T00:46:38", "user": "/api/user/1/"}' http://localhost:8000/api/task/
+                                        </p>
+                                    </div>
                                 <h4>Get all task</h4>
                                 <a href="#">http://{{host}}/api/task/</a>
                                 <h4>Get sinlge task by id</h4>
@@ -240,6 +246,7 @@
                                                 </tbody>
                                               </table>
                                 </div>
+                                
                               </div>
                            </div>
                         </div>
