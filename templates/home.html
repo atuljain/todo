@@ -218,7 +218,28 @@
                                 
                                 <h4>Task Schema</h4>
                                 <a href="#">http://{{host}}/api/task//api/task/schema/</a>
+                                
+                                <h3>AJAX Example Of API's </h3>
 
+                                <h3>Title Search api Example </h3>
+                                <div class="form-group">
+                                        <label for="searchTitle">Search</label>
+                                        <input id="searchTitle" name="searchTitle" class="form-control border-primary" type="text" placeholder="" value="" onkeypress="doSomething(this, event)" onclick="this.select()">
+                                </div>
+                                <div  id="ajaxSearchDive" class="form-group" style="display:none">
+                                        <table id="tableSearchTitle" class="table">
+                                                <thead>
+                                                  <tr>
+                                                    <th scope="col">Title</th>
+                                                    <th scope="col">Due Date</th>
+                                                    <th scope="col">Parent Task</th>
+                                                    <th scope="col">State</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                              </table>
+                                </div>
                               </div>
                            </div>
                         </div>
@@ -228,4 +249,45 @@
             </div>
          </div> 
       </body>
+      <script type = "text/javascript">
+      function doSomething(element, e) {
+            var charCode;
+            if(e && e.which){
+                charCode = e.which;
+            }else if(window.event){
+                e = window.event;
+                charCode = e.keyCode;
+            }
+            if(charCode == 13) {
+                var data = {
+                    'title': $("#searchTitle").val()
+                }
+                postData(data)
+                // Do your thing here with element
+            }
+        }
+        function postData(data){
+            $.ajax({
+            url: "/api/task/?title="+data['title'],
+            dataType: "json",
+            type: "GET",
+            error: function (res) {
+                console.log('err')
+                toastr.error("Error in Mail Sent. Please try after some time.", "Error", toastr_options)
+            },
+            success: function (data) {
+                console.log(data)
+                $.each(data.objects, function(i, val) {
+                    var tr = '<tr><td>'+val.title+'</td>'+
+                        '<td>'+val.due_date+'</td>'+
+                            '<td>'+val.parent_task+'</td>'+
+                                    '<td>'+val.state+'</td>'+
+                        '</tr>';
+                    $("#tableSearchTitle").append(tr)
+                })
+                document.getElementById('ajaxSearchDive').style.display = "block";
+            }
+        });
+        }
+      </script>
    </html>
